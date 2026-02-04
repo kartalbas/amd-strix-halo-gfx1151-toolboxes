@@ -20,10 +20,12 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">STRIX<span class="halo">HALO</span>_TOOLBOXES</div>
+        <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
         <div class="nav-links">
             <a href="#about">The Project</a>
             <a href="#strix">What is Strix Halo?</a>
             <a href="#toolboxes">The Toolboxes</a>
+            <a href="#tutorials">Tutorials</a>
             <a href="#config">Host Config</a>
             <a href="#connect" style="color: var(--accent-red);">Join Community</a>
         </div>
@@ -215,8 +217,7 @@
                 benchmark all toolboxes.
             </p>
 
-            <div
-                style="display: grid; grid-template-columns: minmax(200px, 300px) 1fr; gap: 3rem; margin-bottom: 3rem; align-items: start;">
+            <div class="config-grid">
 
                 <!-- Image Column -->
                 <div>
@@ -373,6 +374,24 @@
         </p>
     </footer>
 
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
+        }
+    </script>
 </body>
 
 <script>
@@ -419,7 +438,7 @@
                 // Initialize Swiper after adding slides
                 const swiper = new Swiper(".mySwiper", {
                     slidesPerView: 1,
-                    spaceBetween: 30,
+                    spaceBetween: 20, /* Reduced spacing for mobile */
                     loop: true,
                     pagination: {
                         el: ".swiper-pagination",
