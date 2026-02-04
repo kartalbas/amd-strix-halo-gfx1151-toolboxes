@@ -259,8 +259,17 @@ a:hover {
 }
 
 .toolbox-icon {
-    font-size: 2rem;
+    height: 48px;
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.toolbox-icon img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    filter: invert(1) hue-rotate(180deg);
 }
 
 .toolbox-card h3 {
