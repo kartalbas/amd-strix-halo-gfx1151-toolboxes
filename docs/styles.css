@@ -57,34 +57,35 @@ a:hover {
     font-weight: 700;
     font-size: 1.1rem;
     color: var(--accent-red);
-    position: relative;
-    animation: glitch 4s infinite alternate;
+    overflow: hidden;
+    border-right: 0.15em solid var(--accent-red);
+    white-space: nowrap;
+    margin: 0;
+    width: 0;
+    animation:
+        typing 2s steps(20, end) forwards,
+        blink-caret 0.75s step-end 6 forwards;
 }
 
-@keyframes glitch {
-    0% {
-        text-shadow: 0 0 0 transparent;
-        transform: translate(0);
+@keyframes typing {
+    from {
+        width: 0
     }
 
-    1% {
-        text-shadow: 2px 2px 0px var(--accent-blue), -2px -2px 0px var(--accent-green);
-        transform: translate(-1px, 1px);
+    to {
+        width: 20ch
+    }
+}
+
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
     }
 
-    2% {
-        text-shadow: -2px 2px 0px var(--accent-blue), 2px -2px 0px var(--accent-green);
-        transform: translate(1px, -1px);
-    }
-
-    3% {
-        text-shadow: 0 0 0 transparent;
-        transform: translate(0);
-    }
-
-    100% {
-        text-shadow: 0 0 0 transparent;
-        transform: translate(0);
+    50% {
+        border-color: var(--accent-red)
     }
 }
 
