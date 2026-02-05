@@ -388,11 +388,16 @@ td {
 }
 
 .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: var(--accent-red);
     color: white;
     padding: 0.8rem 2rem;
     border-radius: 4px;
     font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2;
     transition: background 0.2s;
 }
 
@@ -401,17 +406,29 @@ td {
 }
 
 .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-primary);
     padding: 0.8rem 2rem;
     border-radius: 4px;
     font-weight: 600;
-    transition: border-color 0.2s;
+    font-size: 1rem;
+    line-height: 1.2;
+    transition: all 0.2s;
 }
 
 .btn-secondary:hover {
-    border-color: var(--text-primary);
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    color: white;
+}
+
+.btn-primary svg,
+.btn-secondary svg {
+    margin-right: 0.4rem;
 }
 
 /* Footer */
