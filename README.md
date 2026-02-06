@@ -17,7 +17,7 @@ This is a collection of containerized environments for running GenAI workloads o
 
 ## Links
 
-*   [Strix Halo Home Lab](strixhalo.wiki)
+*   [Strix Halo Home Lab](https://strixhalo.wiki)
 *   [Join the Discord](https://discord.gg/pnPRyucNrG)
 
 ## Support
