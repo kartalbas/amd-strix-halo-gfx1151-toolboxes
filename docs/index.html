@@ -457,8 +457,8 @@
             const data = await response.json();
 
             if (data.status === 'ok') {
-                // Reverse the array to show newest videos first
-                const reversedItems = data.items.reverse();
+                // Keep original order (newest first)
+                const reversedItems = data.items;
 
                 reversedItems.forEach(item => {
                     const videoId = item.guid.split(':')[2];
