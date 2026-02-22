@@ -26,7 +26,7 @@ If you are on Ubuntu, you must first set up these specific permissions:
 sudo usermod -aG video,render $USER
 
 # Ensure the compute device is accessible (persists across reboots)
-echo 'KERNEL=="kfd", GROUP="render", MODE="0660"' | sudo tee /etc/udev/rules.d/70-kfd.rules
+echo -e 'SUBSYSTEM=="kfd", KERNEL=="kfd", MODE="0666"\nSUBSYSTEM=="drm", KERNEL=="renderD*", MODE="0666"' | sudo tee /etc/udev/rules.d/70-kfd.rules
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 

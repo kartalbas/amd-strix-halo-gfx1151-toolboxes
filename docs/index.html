@@ -431,7 +431,8 @@
                                 <div class="cmd">$ sudo usermod -aG video,render $USER</div>
                                 <div style="margin-top: 1.5rem; margin-bottom: 1rem; color: #888;"># Ensure the compute
                                     device is accessible (persists across reboots)</div>
-                                <div class="cmd">$ echo 'KERNEL=="kfd", GROUP="render", MODE="0660"' | sudo tee
+                                <div class="cmd">$ echo -e 'SUBSYSTEM=="kfd", KERNEL=="kfd",
+                                    MODE="0666"\nSUBSYSTEM=="drm", KERNEL=="renderD*", MODE="0666"' | sudo tee
                                     /etc/udev/rules.d/70-kfd.rules</div>
                                 <div class="cmd">$ sudo udevadm control --reload-rules && sudo udevadm trigger</div>
                                 <div style="margin-top: 1.5rem; margin-bottom: 1rem; color: #888;"># Create your
