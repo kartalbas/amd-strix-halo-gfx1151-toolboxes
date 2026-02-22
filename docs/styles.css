@@ -1,4 +1,9 @@
 /* Global Styles */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
 :root {
     --bg-color: #050505;
     --card-bg: #0f0f0f;
@@ -649,4 +654,59 @@ footer {
 .swiper-button-prev:after {
     font-size: 1.2rem !important;
     font-weight: bold;
+}
+
+/* OS Tabs */
+.os-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1px;
+}
+
+.os-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.os-tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.os-tab-btn.active {
+    color: var(--accent-red);
+    border-bottom-color: var(--accent-red);
+}
+
+.os-tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.os-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

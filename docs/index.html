@@ -285,104 +285,269 @@
                         <span class="spec-label">OS</span>
                         <span class="spec-value">Fedora 43 (Linux 6.18.5)</span>
                     </div>
-
-                    <div
-                        style="margin-top: 2rem; padding: 1.5rem; background: rgba(237, 28, 36, 0.05); border-radius: 8px; border: 1px solid rgba(237, 28, 36, 0.2);">
-                        <h4 style="color: var(--accent-red); margin-bottom: 0.5rem; font-size: 1rem;">Why Custom Kernel
-                            Parameters?</h4>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
-                            Many guides suggest statically partitioning memory between the CPU and iGPU (e.g., locking
-                            32GB for video).
-                            However, this is a waste. With <strong>Unified Dynamic Memory</strong>, we can let the GPU
-                            access nearly all system RAM (up to ~124GB) on demand, while keeping the flexibility to use
-                            it for the CPU when needed.
-                        </p>
-                    </div>
                 </div>
-            </div>
-
-            <!-- Terminal Block -->
-            <div class="terminal-block" style="margin-bottom: 2rem;">
-                <div class="terminal-header" style="background: #333; padding: 0.5rem; text-align: left;">
-                    <span
-                        style="color: #bbb; font-family: var(--font-mono); font-size: 0.8rem;">root@strix-halo:~</span>
-                </div>
-                <div class="terminal-body" style="overflow-x: auto;">
-                    <div style="margin-bottom: 1rem; color: #888;"># Add these to GRUB_CMDLINE_LINUX in
-                        /etc/default/grub</div>
-                    <div class="cmd">$ sudo vim /etc/default/grub</div>
-                    <div class="output"
-                        style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">
-                        GRUB_CMDLINE_LINUX="... <span style="color: var(--accent-red);">iommu=pt amdgpu.gttsize=126976
-                            ttm.pages_limit=32505856</span>"</div>
-                    <div class="cmd" style="margin-top: 1rem;">$ sudo grub2-mkconfig -o /boot/grub2/grub.cfg</div>
-                </div>
-            </div>
-
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 30%;">Parameter</th>
-                            <th>How it enables Unified Memory</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="font-family: var(--font-mono);">iommu=pt</td>
-                            <td><strong>Pass-Through Mode</strong>: Bypass IOMMU translation for the GPU, reducing
-                                overhead when
-                                accessing the user-space pages.</td>
-                        </tr>
-                        <tr>
-                            <td style="font-family: var(--font-mono);">amdgpu.gttsize=126976</td>
-                            <td><strong>GTT Size (Graphics Translation Table)</strong>: Explicitly sets the maximum
-                                unified memory
-                                addressable by the GPU to ~124GB (126976 MB), overriding default driver limits.</td>
-                        </tr>
-                        <tr>
-                            <td style="font-family: var(--font-mono);">ttm.pages_limit=32505856</td>
-                            <td><strong>Pinned Memory Limit</strong>: Allows the TTM (Translation Table Manager) to pin
-                                up to ~124GB
-                                of pages in high-speed system RAM, ensuring the GPU has direct access without swapping.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
             <div style="margin-top: 3rem;">
-                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Power & Performance Tuning</h3>
-                <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
-                    Following the documentation <a href="https://strixhalo.wiki/AI/AI_Capabilities_Overview"
-                        target="_blank" style="color: var(--accent-red); text-decoration: underline;">here</a>, we set a
-                    performance profile to get max performance.
-                </p>
+                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Kernel Parameters</h3>
 
-                <div class="terminal-block">
+                <div
+                    style="margin-bottom: 2rem; padding: 1.5rem; background: rgba(237, 28, 36, 0.05); border-radius: 8px; border: 1px solid rgba(237, 28, 36, 0.2);">
+                    <h4 style="color: var(--accent-red); margin-bottom: 0.5rem; font-size: 1rem;">Why Custom Kernel
+                        Parameters?</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                        Many guides suggest statically partitioning memory between the CPU and iGPU (e.g., locking
+                        32GB for video).
+                        However, this is a waste. With <strong>Unified Dynamic Memory</strong>, I can let the GPU
+                        access nearly all system RAM (up to ~124GB) on demand, while keeping the flexibility to use
+                        it for the CPU when needed.
+                    </p>
+                </div>
+
+                <!-- Terminal Block -->
+                <div class="terminal-block" style="margin-bottom: 2rem;">
                     <div class="terminal-header" style="background: #333; padding: 0.5rem; text-align: left;">
                         <span
                             style="color: #bbb; font-family: var(--font-mono); font-size: 0.8rem;">root@strix-halo:~</span>
                     </div>
                     <div class="terminal-body" style="overflow-x: auto;">
-                        <div class="cmd">$ sudo dnf install tuned</div>
-                        <div class="cmd">$ sudo systemctl enable --now tuned</div>
-
-                        <div class="cmd" style="margin-top: 1rem;">$ tuned-adm list | grep accelerator</div>
+                        <div style="margin-bottom: 1rem; color: #888;"># Add these to GRUB_CMDLINE_LINUX in
+                            /etc/default/grub</div>
+                        <div class="cmd">$ sudo vim /etc/default/grub</div>
                         <div class="output"
-                            style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">-
-                            accelerator-performance - Throughput performance based tuning with disabled higher latency
-                            STOP states</div>
-
-                        <div class="cmd" style="margin-top: 1rem;">$ sudo tuned-adm profile accelerator-performance
-                        </div>
-                        <div class="cmd">$ tuned-adm active</div>
-                        <div class="output"
-                            style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">Current
-                            active profile: accelerator-performance</div>
+                            style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">
+                            GRUB_CMDLINE_LINUX="... <span style="color: var(--accent-red);">iommu=pt
+                                amdgpu.gttsize=126976
+                                ttm.pages_limit=32505856</span>"</div>
+                        <div class="cmd" style="margin-top: 1rem;">$ sudo grub2-mkconfig -o /boot/grub2/grub.cfg</div>
                     </div>
                 </div>
-            </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Parameter</th>
+                                <th>How it enables Unified Memory</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-family: var(--font-mono);">iommu=pt</td>
+                                <td><strong>Pass-Through Mode</strong>: Bypass IOMMU translation for the GPU, reducing
+                                    overhead when
+                                    accessing the user-space pages.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: var(--font-mono);">amdgpu.gttsize=126976</td>
+                                <td><strong>GTT Size (Graphics Translation Table)</strong>: Explicitly sets the maximum
+                                    unified memory
+                                    addressable by the GPU to ~124GB (126976 MB), overriding default driver limits.</td>
+                            </tr>
+                            <tr>
+                                <td style="font-family: var(--font-mono);">ttm.pages_limit=32505856</td>
+                                <td><strong>Pinned Memory Limit</strong>: Allows the TTM (Translation Table Manager) to
+                                    pin
+                                    up to ~124GB
+                                    of pages in high-speed system RAM, ensuring the GPU has direct access without
+                                    swapping.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Container Engine & Permissions -->
+                <div style="margin-top: 3rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Container Engine & Permissions</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                        Depending on your Linux distribution, you will need a different container engine to properly
+                        access
+                        the GPU.
+                        Select your OS below for specific instructions.
+                    </p>
+
+                    <div class="os-tabs">
+                        <button class="os-tab-btn active" data-target="os-fedora">Fedora (Toolbox)</button>
+                        <button class="os-tab-btn" data-target="os-ubuntu">Ubuntu (Distrobox)</button>
+                    </div>
+
+                    <div id="os-fedora" class="os-tab-content active">
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                            I test this setup on recent Fedora distributions because they have native support for <a
+                                href="https://containertoolbx.org/" target="_blank"
+                                style="color: var(--accent-red); text-decoration: underline;">Toolbox</a>. This allows
+                            accessing containers in a seamless and convenient way. The command to use passes additional
+                            parameters to explicitly map the GPU devices, as shown below:
+                        </p>
+                        <div class="terminal-block" style="margin-bottom: 2rem;">
+                            <div class="terminal-header" style="background: #333; padding: 0.5rem; text-align: left;">
+                                <span
+                                    style="color: #bbb; font-family: var(--font-mono); font-size: 0.8rem;">user@fedora:~</span>
+                            </div>
+                            <div class="terminal-body" style="overflow-x: auto;">
+                                <div style="margin-bottom: 1rem; color: #888;"># Create your toolbox mapped to the
+                                    host's
+                                    GPU</div>
+                                <div class="cmd">$ toolbox create &lt;TOOLBOX_NAME&gt; \</div>
+                                <div class="cmd">&nbsp;&nbsp;--image &lt;IMAGE_URL&gt; \</div>
+                                <div class="cmd">&nbsp;&nbsp;-- --device /dev/dri --device /dev/kfd \</div>
+                                <div class="cmd">&nbsp;&nbsp;--group-add video --group-add render --security-opt
+                                    seccomp=unconfined</div>
+
+                                <div
+                                    style="margin-top: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 4px; border-left: 2px solid var(--accent-red);">
+                                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">
+                                        <strong>Note:</strong> <code
+                                            style="color: var(--text-primary);">&lt;TOOLBOX_NAME&gt;</code> and <code
+                                            style="color: var(--text-primary);">&lt;IMAGE_URL&gt;</code> are
+                                        placeholders.
+                                        Check
+                                        the specific toolbox repository for the correct values.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="os-ubuntu" class="os-tab-content">
+                        <div
+                            style="margin-bottom: 1.5rem; padding: 1.5rem; background: rgba(0, 164, 228, 0.05); border-radius: 8px; border: 1px solid rgba(0, 164, 228, 0.2);">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 0.5rem; font-size: 1rem;">Why
+                                Distrobox?
+                            </h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                                Users running Ubuntu have reported permission issues with the default
+                                <code>toolbox</code> package
+                                that can break GPU access. They have shared the following configuration using
+                                <strong>Distrobox</strong>, which works:
+                            </p>
+                        </div>
+
+                        <div class="terminal-block" style="margin-bottom: 2rem;">
+                            <div class="terminal-header" style="background: #333; padding: 0.5rem; text-align: left;">
+                                <span
+                                    style="color: #bbb; font-family: var(--font-mono); font-size: 0.8rem;">user@ubuntu:~</span>
+                            </div>
+                            <div class="terminal-body" style="overflow-x: auto;">
+                                <div style="margin-bottom: 1rem; color: #888;"># Add your user to required GPU groups
+                                </div>
+                                <div class="cmd">$ sudo usermod -aG video,render $USER</div>
+                                <div style="margin-top: 1.5rem; margin-bottom: 1rem; color: #888;"># Ensure the compute
+                                    device is accessible (persists across reboots)</div>
+                                <div class="cmd">$ echo 'KERNEL=="kfd", GROUP="render", MODE="0660"' | sudo tee
+                                    /etc/udev/rules.d/70-kfd.rules</div>
+                                <div class="cmd">$ sudo udevadm control --reload-rules && sudo udevadm trigger</div>
+                                <div style="margin-top: 1.5rem; margin-bottom: 1rem; color: #888;"># Create your
+                                    distrobox
+                                    mapped to the host's GPU</div>
+                                <div class="cmd">$ distrobox create &lt;TOOLBOX_NAME&gt; \</div>
+                                <div class="cmd">&nbsp;&nbsp;--image &lt;IMAGE_URL&gt; \</div>
+                                <div class="cmd">&nbsp;&nbsp;-- --device /dev/dri --device /dev/kfd \</div>
+                                <div class="cmd">&nbsp;&nbsp;--group-add video --group-add render --group-add sudo
+                                    --security-opt seccomp=unconfined</div>
+
+                                <div
+                                    style="margin-top: 1rem; padding: 1rem; background: rgba(0, 164, 228, 0.05); border-radius: 4px; border-left: 2px solid var(--accent-blue);">
+                                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">
+                                        <strong>Note:</strong> <code
+                                            style="color: var(--text-primary);">&lt;TOOLBOX_NAME&gt;</code> and <code
+                                            style="color: var(--text-primary);">&lt;IMAGE_URL&gt;</code> are
+                                        placeholders.
+                                        Check
+                                        the specific toolbox repository for the correct values.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="margin-bottom: 2rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border-radius: 8px; border: 1px solid var(--border-color);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                                <strong>Note:</strong> This Distrobox configuration has been tested on <strong>Ubuntu
+                                    25.10</strong> with <strong>Mainline Kernel 6.18.7-061807</strong>.
+                                To enable mainline kernels on Ubuntu, you can use the <a
+                                    href="https://github.com/bkw777/mainline" target="_blank"
+                                    style="color: var(--accent-blue); text-decoration: underline;">Ubuntu Mainline
+                                    Kernel
+                                    Installer</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Power & Performance Tuning</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                        Following the documentation <a href="https://strixhalo.wiki/AI/AI_Capabilities_Overview"
+                            target="_blank" style="color: var(--accent-red); text-decoration: underline;">here</a>, I
+                        set a
+                        performance profile to get max performance.
+                    </p>
+
+                    <div class="os-tabs">
+                        <button class="os-tab-btn active" data-target="tuning-os-fedora">Fedora</button>
+                        <button class="os-tab-btn" data-target="tuning-os-ubuntu">Ubuntu</button>
+                    </div>
+
+                    <div id="tuning-os-fedora" class="os-tab-content active">
+                        <div class="terminal-block">
+                            <div class="terminal-header" style="background: #333; padding: 0.5rem; text-align: left;">
+                                <span
+                                    style="color: #bbb; font-family: var(--font-mono); font-size: 0.8rem;">root@fedora:~</span>
+                            </div>
+                            <div class="terminal-body" style="overflow-x: auto;">
+                                <div class="cmd">$ sudo dnf install tuned</div>
+                                <div class="cmd">$ sudo systemctl enable --now tuned</div>
+
+                                <div class="cmd" style="margin-top: 1rem;">$ tuned-adm list | grep accelerator</div>
+                                <div class="output"
+                                    style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">-
+                                    accelerator-performance - Throughput performance based tuning with disabled higher
+                                    latency
+                                    STOP states</div>
+
+                                <div class="cmd" style="margin-top: 1rem;">$ sudo tuned-adm profile
+                                    accelerator-performance
+                                </div>
+                                <div class="cmd">$ tuned-adm active</div>
+                                <div class="output"
+                                    style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">
+                                    Current
+                                    active profile: accelerator-performance</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tuning-os-ubuntu" class="os-tab-content">
+                        <div class="terminal-block">
+                            <div class="terminal-header" style="background: #333; padding: 0.5rem; text-align: left;">
+                                <span
+                                    style="color: #bbb; font-family: var(--font-mono); font-size: 0.8rem;">root@ubuntu:~</span>
+                            </div>
+                            <div class="terminal-body" style="overflow-x: auto;">
+                                <div class="cmd">$ sudo apt update && sudo apt install tuned</div>
+                                <div class="cmd">$ sudo systemctl enable --now tuned</div>
+
+                                <div class="cmd" style="margin-top: 1rem;">$ tuned-adm list | grep accelerator</div>
+                                <div class="output"
+                                    style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">-
+                                    accelerator-performance - Throughput performance based tuning with disabled higher
+                                    latency
+                                    STOP states</div>
+
+                                <div class="cmd" style="margin-top: 1rem;">$ sudo tuned-adm profile
+                                    accelerator-performance
+                                </div>
+                                <div class="cmd">$ tuned-adm active</div>
+                                <div class="output"
+                                    style="color: var(--text-primary); white-space: normal; overflow-wrap: anywhere;">
+                                    Current
+                                    active profile: accelerator-performance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </section>
 
         <!-- Connect -->
@@ -441,6 +606,72 @@
                 });
             });
         }
+
+        // OS Tabs
+        const tabsContainers = document.querySelectorAll('.os-tabs');
+
+        tabsContainers.forEach(tabsDiv => {
+            const btns = tabsDiv.querySelectorAll('.os-tab-btn');
+            // Find the common wrapper div containing the buttons and the content panels
+            const parentDiv = tabsDiv.parentElement;
+            const contents = parentDiv.querySelectorAll('.os-tab-content');
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class only from the tabs within this specific group
+                    btns.forEach(b => b.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        });
+        // Update URL hash on scroll (but not on initial load)
+        let isInitialLoad = true;
+
+        // After 500ms, assume the page has loaded and we can start updating hashes
+        setTimeout(() => {
+            isInitialLoad = false;
+        }, 500);
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -50% 0px', // More precise triggering near the top-middle
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    if (id) {
+                        // Only update history if it's not the initial load, to prevent jumping
+                        if (!isInitialLoad && window.scrollY > 50) {
+                            history.replaceState(null, null, `#${id}`);
+                        } else if (!isInitialLoad && window.scrollY <= 50) {
+                            // If scrolled to very top, clear hash
+                            history.replaceState(null, null, ' ');
+                        }
+
+                        // Update active state in navigation
+                        document.querySelectorAll('.nav-links a').forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.style.opacity = '1';
+                            } else {
+                                link.style.opacity = '0.7';
+                            }
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section[id]').forEach((section) => {
+            observer.observe(section);
+        });
     </script>
 </body>
 
