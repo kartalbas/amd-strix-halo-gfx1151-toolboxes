@@ -32,9 +32,6 @@ sudo udevadm control --reload-rules && sudo udevadm trigger
 
 > **Note:** This Distrobox configuration has been tested on **Ubuntu 25.10** with **Mainline Kernel 6.18.7-061807**. To enable mainline kernels on Ubuntu, you can use the [Ubuntu Mainline Kernel Installer](https://github.com/bkw777/mainline).
 
----
-
-Create and enter your toolbox of choice. **(Ubuntu users: remember to use `distrobox` instead of `toolbox` in the commands below).**
 
 ## Links
 
